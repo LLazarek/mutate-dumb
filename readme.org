@@ -1,0 +1,7 @@
+#+TITLE: (dumb) Program mutation generator
+
+To install: clone the repository, and inside the top level directory run
+: raco pkg install
+
+See the docs for usage.
+
