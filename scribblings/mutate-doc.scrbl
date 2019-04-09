@@ -27,11 +27,8 @@
          syntax?]{
 
   Mutates the given module syntax, returning a mutated version. The
-  syntax should be a list, such as the form produced by
-  @racket[read-module], but there are no restrictions on the actual
-  shape. For example, both of the following shapes are fine:
+  syntax should be a list of top level expressions, like so:
 
-  @racketblock[#'(module name lang (#%module-begin e ...))]
   @racketblock[#'(e ...)]
 
   Those @racket[e]'s which have the following form will be considered
@@ -92,6 +89,8 @@
 
   Reads the syntax of the module located at @racket[path]. This is
   useful if you want to mutate a program in a file. The resulting
-  syntax can be passed directly to @racket[mutate-program].
+  syntax can't be passed directly to @racket[mutate-program], but the
+  top-level definitions can easily be extracted with
+  @racket[syntax-parse].
 
 }
