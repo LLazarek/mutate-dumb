@@ -229,7 +229,7 @@
                 ((~datum define/override) id+other/over ...))))
 (define-syntax-class contracted-definition
   #:description "define/contract form"
-  (pattern ((~datum define/contract) id/sig ctc body ...)))
+  (pattern ((~datum define) id/sig body ...)))
 (define-syntax-class non-keyword
   #:description "non-keyword form"
   (pattern (~not (~or (~datum #%module-begin)
@@ -481,7 +481,7 @@
               [return
                (mutated-program
                 (quasisyntax/loc stx
-                  ((define/contract def.id/sig def.ctc
+                  ((define def.id/sig
                      #,@body-stxs/mutated)
                    #,@program-rest))
                 (if body-stxs-mutated?
