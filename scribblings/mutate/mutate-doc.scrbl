@@ -11,12 +11,11 @@
 @; Boilerplate ;@
 @;;;;;;;;;;;;;;;@
 
-@(require (for-label racket
-                     "main.rkt")
+@(require (for-label racket mutate)
           scribble/example)
 
 @(define mutate-eval (make-base-eval))
-@examples[#:eval mutate-eval #:hidden (require racket "main.rkt")]
+@examples[#:eval mutate-eval #:hidden (require racket mutate)]
 
 @;;;;;;;;;;;;;;;;;;;;;;;@
 @; Begin documentation ;@
@@ -27,14 +26,17 @@
          syntax?]{
 
   Mutates the given module syntax, returning a mutated version. The
-  syntax should be a list of top level expressions, like so:
+  syntax should be a list, such as the form produced by
+  @racket[read-module], but there are no restrictions on the actual
+  shape. For example, both of the following shapes are fine:
 
+  @racketblock[#'(module name lang (#%module-begin e ...))]
   @racketblock[#'(e ...)]
 
   Those @racket[e]'s which have the following form will be considered
   candidates for mutation:
 
-  @racketblock[(define/contract head ctc body ...)]
+  @racketblock[(define head ctc body ...)]
 
   Within such definitions, the @racket[body] expressions will be mutated.
 
@@ -49,16 +51,16 @@
   @racket[stx], a @racket[mutation-index-exception?] is raised.
 
   @examples[#:eval mutate-eval
-  (mutate-program #'((define/contract (foo x) any/c (+ 1 2)))
+  (mutate-program #'((define (foo x) any/c (+ 1 2)))
                   0)
-  (mutate-program #'((define/contract (foo x) any/c (+ 1 2)))
+  (mutate-program #'((define (foo x) any/c (+ 1 2)))
                   1)
-  (mutate-program #'((define/contract (foo x) any/c (+ 1 2)))
+  (mutate-program #'((define (foo x) any/c (+ 1 2)))
                   2)
-  (mutate-program #'((define/contract (foo x) any/c (+ 1 2)))
+  (mutate-program #'((define (foo x) any/c (+ 1 2)))
                   3)
   (with-handlers ([mutation-index-exception? (lambda _ (displayln 'end-of-mutants!))])
-    (mutate-program #'((define/contract (foo x) any/c (+ 1 2)))
+    (mutate-program #'((define (foo x) any/c (+ 1 2)))
                     4))]
 
 }
@@ -89,8 +91,6 @@
 
   Reads the syntax of the module located at @racket[path]. This is
   useful if you want to mutate a program in a file. The resulting
-  syntax can't be passed directly to @racket[mutate-program], but the
-  top-level definitions can easily be extracted with
-  @racket[syntax-parse].
+  syntax can be passed directly to @racket[mutate-program].
 
 }
